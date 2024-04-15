@@ -1,25 +1,23 @@
-import { UseClient } from "../Prisma/userClient"
-import { hash } from "bcryptjs"
-
-interface IUser {
-  name: string,
-  email: string,
-  password: string,
-}
+import { UseClient } from "../Prisma/userClient";
+import { hash } from "bcryptjs";
+import { IUser } from "../types/user";
 
 class CreateUser {
 
-  async execute({name, email, password}:IUser) {
-  // Verificar se existe usuario no banco de dados 
-    const userAlreadyExists = await UseClient.user.findFirst({
-      where: {
-        email
-      }
-    });    
-    if(userAlreadyExists) throw new Error('User Already Exist')       
-    // criptografia do password do usuario
+  async execute({ name, email, password }: IUser) {
+    // Verificar se o usuário já existe no banco de dados 
+    const existingUser = await UseClient.user.findFirst({
+      where: { email }
+    });
+    
+    if (existingUser) {
+      throw new Error('User Already Exists');
+    }
+
+    // Criptografar a senha do usuário
     const passwordHash = await hash(password, 8);
-    // Criação de usuario
+
+    // Criar um novo usuário no banco de dados
     const newUser = await UseClient.user.create({
       data: {
         name,
@@ -27,6 +25,7 @@ class CreateUser {
         password: passwordHash
       }
     });
+
     return { newUser };
   }
 }
