@@ -10,11 +10,11 @@ const UserSchema: ZodType<IUser> = z.object({
 })
 
 class CreateUserController {
-  async handler (request:Request, response:Response){
+  async handler (request:Request, response:Response) {
     try {
       const {name, email, password} = UserSchema.parse(request.body);
       const CreateNewUser = new CreateUser();
-      const user = CreateNewUser.execute({ name, email, password });
+      const user = await CreateNewUser.execute({ name, email, password });
       return response.status(201).json(user);
     } catch (error) {
       response.status(400).json({error: `Não foi possivel criar usuário, ${error}`});

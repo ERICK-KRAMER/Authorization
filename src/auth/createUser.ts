@@ -3,30 +3,30 @@ import bcryptjs from "bcryptjs";
 import { IUser } from "../types/user";
 
 class CreateUser {
-
   async execute({ name, email, password }: IUser) {
-    // Verificar se o usuário já existe no banco de dados 
-    const existingUser = await UseClient.user.findFirst({
-      where: { email }
-    });
-    
-    if (existingUser) {
-      throw new Error('User Already Exists');
-    }
+      // Verificar se o usuário já existe no banco de dados 
+      const existingUser = await UseClient.user.findFirst({
+        where: { email }
+      });
 
-    // Criptografar a senha do usuário
-    const passwordHash = await bcryptjs.hash(password, 8);
-
-    // Criar um novo usuário no banco de dados
-    const newUser = await UseClient.user.create({
-      data: {
-        name,
-        email,
-        password: passwordHash
+      if (existingUser) {
+        throw new Error('User Already Exists');
       }
-    });
 
-    return { newUser };
+      // Criptografar a senha do usuário
+      const passwordHash = await bcryptjs.hash(password, 8);
+
+      // Criar um novo usuário no banco de dados
+      const newUser = await UseClient.user.create({
+        data: {
+          name,
+          email,
+          password: passwordHash
+        }
+      });
+
+      return newUser
+
   }
 }
 
