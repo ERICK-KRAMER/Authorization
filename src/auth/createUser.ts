@@ -1,5 +1,5 @@
 import { UseClient } from "../Prisma/userClient";
-import { hash } from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import { IUser } from "../types/user";
 
 class CreateUser {
@@ -15,7 +15,7 @@ class CreateUser {
     }
 
     // Criptografar a senha do usuário
-    const passwordHash = await hash(password, 8);
+    const passwordHash = await bcryptjs.hash(password, 8);
 
     // Criar um novo usuário no banco de dados
     const newUser = await UseClient.user.create({
