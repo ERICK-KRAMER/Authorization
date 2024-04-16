@@ -27,7 +27,10 @@ class AuthLoginUser {
 
     const name = userAlreadyExists.name;
     
-    const token = sign({ name }, "a523e3f0-6bd0-48b9-a408-6dc199b85080");
+    const token = sign({ name }, "a523e3f0-6bd0-48b9-a408-6dc199b85080", {
+      subject: userAlreadyExists.id,
+      expiresIn: "30m"
+    });
 
     return token;
   
