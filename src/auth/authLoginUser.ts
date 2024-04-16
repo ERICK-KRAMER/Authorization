@@ -1,6 +1,6 @@
-import { compare } from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import { UseClient } from "../Prisma/userClient";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export interface IAuth {
   email: string,
@@ -19,7 +19,7 @@ class AuthLoginUser {
       throw new Error("User or password incorrect");
     }
     
-    const passwordMatch = await compare(password, userAlreadyExists.password);
+    const passwordMatch = await bcryptjs.compare(password, userAlreadyExists.password);
     
     if (!passwordMatch) {
       throw new Error("User or password incorrect");
@@ -27,7 +27,7 @@ class AuthLoginUser {
 
     const name = userAlreadyExists.name;
     
-    const token = sign({ name }, "a523e3f0-6bd0-48b9-a408-6dc199b85080", {
+    const token = jwt.sign({ name }, "a523e3f0-6bd0-48b9-a408-6dc199b85080", {
       subject: userAlreadyExists.id,
       expiresIn: "30m"
     });

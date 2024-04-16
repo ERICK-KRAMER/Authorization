@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const Auth = (request: Request, response: Response, next: NextFunction) => {
   const auth = request.headers.authorization;
@@ -10,7 +10,7 @@ export const Auth = (request: Request, response: Response, next: NextFunction) =
 
   try {
 
-    verify(token, "a523e3f0-6bd0-48b9-a408-6dc199b85080");
+    jwt.verify(token, "a523e3f0-6bd0-48b9-a408-6dc199b85080");
     
     return next();
 
