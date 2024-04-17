@@ -25,7 +25,7 @@ class AuthLoginUser {
       throw new Error("User or password incorrect");
     }
 
-    const name = userAlreadyExists.name;
+    const name = userAlreadyExists.firstName;
     
     const token = jwt.sign({ name }, "a523e3f0-6bd0-48b9-a408-6dc199b85080", {
       subject: userAlreadyExists.id,
