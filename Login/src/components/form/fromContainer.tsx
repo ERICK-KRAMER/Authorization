@@ -3,14 +3,15 @@ import React, { ReactNode } from 'react';
 
 type FormContainerProps = {
   children: ReactNode[];
+  isRegister: boolean;
 };
 
-export const FormContainer = ({ children }: FormContainerProps) => {
+export const FormContainer = ({ children, isRegister }: FormContainerProps) => {
   return (
-    <div className="w-full md:w-1/2 py-10 px-5 md:px-10">
+    <div className={`w-full md:w-1/2 py-10 px-5 md:px-10 ${isRegister ? '-translate-x-[470px] transition duration-500' : 'transition duration-500'}`}>
       <div className="text-center mb-10">
-        <h1 className="font-bold text-3xl text-gray-900">REGISTER</h1>
-        <p>Enter your information to register</p>
+        <h1 className="font-bold text-3xl text-gray-900">{isRegister ? 'REGISTER' : "LOGIN"}</h1>
+        <p>Enter your information to {isRegister ? 'Register' : 'Login'} </p>
       </div>
       <div>
         {React.Children.map(children, (child, index) => (
