@@ -1,7 +1,7 @@
 import { Form } from "./components/form";
-import { Register } from "./api";
+import { LoginUser, Register } from "./api";
 import { useRef, useState } from "react";
-import { RegisterSchema } from "./helpers/validation";
+import { LoginSchema, RegisterSchema } from "./helpers/validation";
 import { z } from "zod";
 import { ArrowUpRight } from "lucide-react";
 
@@ -17,13 +17,39 @@ export default function App() {
   const password = useRef<HTMLInputElement>(null);
   const confirmPassword = useRef<HTMLInputElement>(null);
 
-  async function handlerRegister() {
+  const emailValue = email.current?.value ?? '';
+  const passwordValue = password.current?.value ?? '';
+  const firstNameValue = firstName.current?.value ?? '';
+  const lastNameValue = lastName.current?.value ?? '';
+  const confirmPasswordValue = confirmPassword.current?.value ?? '';
+  
+  async function handlerLogin() {
 
-    const emailValue = email.current?.value ?? '';
-    const passwordValue = password.current?.value ?? '';
-    const firstNameValue = firstName.current?.value ?? '';
-    const lastNameValue = lastName.current?.value ?? '';
-    const confirmPasswordValue = confirmPassword.current?.value ?? '';
+    try {
+      setErrorMessage(false);
+      setErrorMessageText("");
+      
+      LoginSchema.parse({
+        email: emailValue,
+        password: passwordValue,
+      });
+
+      await LoginUser({email: emailValue, password: passwordValue})
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const validationErrors = error.errors.map(err => setErrorMessageText(err.message));
+        console.log(validationErrors);
+        setErrorMessage(true);
+      } else {
+        console.log(error);
+        alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.");
+      }
+    }
+  }
+
+  async function handlerRegister() {
 
     try {
       setErrorMessage(false);
@@ -68,13 +94,21 @@ export default function App() {
         <ArrowUpRight className={`absolute right-2 top-2 rounded-full w-10 h-10 cursor-pointer hover:bg-indigo-500 transition-colors duration-500 hover:text-white z-10 ${isRegister ? "text-white" : ""}`} onClick={handleChangeLoginRegister}/>
         <Form.Image isRegister={isRegister}/>
         <Form.Container isRegister={isRegister}>
-          {errorMessage ? <small className="text-red-500">{errorMessageText}</small> : null}
-          <Form.Input label="First name" placeholder="John"  inputRef={firstName}/>
-          <Form.Input label="Last name"  placeholder="Smith" inputRef={lastName}/>
+          {isRegister ? (
+            <>
+              <Form.Input label="First name" placeholder="John"  inputRef={firstName}/>
+              <Form.Input label="Last name"  placeholder="Smith" inputRef={lastName}/>
+            </>
+          ) : null}
           <Form.Input label="Email" placeholder="johnsmith@example.com" inputRef={email}/>
           <Form.Input label="Password" type="password" placeholder="*************" inputRef={password}/>
-          <Form.Input label="Confirm-password" type="password" placeholder="*************" inputRef={confirmPassword}/>
-          <Form.Button text="Submit" onClick={handlerRegister}/>
+          {isRegister && (
+            <Form.Input label="Confirm-password" type="password" placeholder="*************" inputRef={confirmPassword}/>
+          )}
+          {isRegister ? 
+          <Form.Button text={isRegister ? "Register" : "Login"} onClick={handlerRegister}/> 
+          : 
+          <Form.Button text={isRegister ? "Register" : "Login"} onClick={handlerLogin}/>}
         </Form.Container>
       </Form.Root>
     </>

@@ -4,6 +4,7 @@ export interface IIpunt extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   className?: string;
   inputRef?: RefObject<HTMLInputElement>;
+  error?: string
 }
 
 export const Input = ({ label, className, inputRef, ...rest }: IIpunt) => {

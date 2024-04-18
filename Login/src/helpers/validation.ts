@@ -8,4 +8,9 @@ const RegisterSchema = z.object({
   confirmPassword: z.string().min(6),
 });
 
-export { RegisterSchema };
+const LoginSchema = z.object({
+  email: z.string().email("Invalid Email"),
+  password: z.string().min(6),
+})
+
+export { RegisterSchema, LoginSchema };
