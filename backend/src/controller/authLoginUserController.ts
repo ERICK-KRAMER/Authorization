@@ -14,7 +14,7 @@ class AuthLoginUserController {
       const { email, password } = LoginUserSchema.parse(request.body);
       const authLoginUser = new AuthLoginUser();
       const login = await authLoginUser.execute({ email, password });
-      return response.status(200).json(login);
+      return response.status(200).json({token: login});
     } catch (error) {
       return response.status(400).json({
         message: error || "Unexpected error.",
