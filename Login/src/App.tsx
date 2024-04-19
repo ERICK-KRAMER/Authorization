@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { LoginSchema, RegisterSchema } from "./helpers/validation";
 import { z } from "zod";
 import { ArrowUpRight } from "lucide-react";
+import img from "../public/6310507.jpg"
 
 export default function App() {
 
@@ -88,11 +89,16 @@ export default function App() {
     setIsRegister(prev => !prev);
   }
 
+  const img1 = {
+    url: img,
+    alt: "Login"
+  }  
+
   return (
     <>
       <Form.Root>
         <ArrowUpRight className={`absolute right-2 top-2 rounded-full w-10 h-10 cursor-pointer hover:bg-indigo-500 transition-colors duration-500 hover:text-white z-10 ${isRegister ? "text-white" : ""}`} onClick={handleChangeLoginRegister}/>
-        <Form.Image isRegister={isRegister}/>
+        <Form.Image isRegister={isRegister} img={img1}/>
         <Form.Container isRegister={isRegister}>
           {isRegister ? (
             <>
