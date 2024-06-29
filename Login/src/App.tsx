@@ -1,10 +1,10 @@
 import { Form } from "./components/form";
-import { LoginUser, Register } from "./api";
+// import { LoginUser, Register } from "./api";
 import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { Auth } from "./api/index";
 
-// Define os tipos para os formulários de registro e login
 interface IRegisterForm {
   firstName: string;
   lastName: string;
@@ -27,13 +27,13 @@ export default function App() {
 
   const { register, handleSubmit } = useForm<IRegisterForm | ILoginForm>();
 
-  // Corrigir nome da função e definir tipo genérico para o manipulador de envio
   const onSubmit: SubmitHandler<IRegisterForm | ILoginForm> = async (data) => {
+    const { register, singIn } = new Auth();
     if (isRegister) {
-      const response = await Register(data as IRegisterForm);
+      const response = await register(data as IRegisterForm);
       console.log(response);
     } else {
-      const response = await LoginUser(data as ILoginForm);
+      const response = await singIn(data as ILoginForm);
       console.log(response);
     }
   }
@@ -42,7 +42,7 @@ export default function App() {
     <>
       <Form.Root>
         <ArrowUpRight className={`absolute z-20 right-2 top-2 rounded-full w-10 h-10 cursor-pointer hover:bg-indigo-500 
-          transition-colors duration-500 hover:text-white ${isRegister ? "text-white" : ""}`
+          transition-colors duration-500 hover:text-white`
         } onClick={handleChangeLoginRegister} />
         <Form.Image isRegister={isRegister} />
         {

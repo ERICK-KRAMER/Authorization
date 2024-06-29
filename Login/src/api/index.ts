@@ -11,38 +11,40 @@ export interface ILoginUser {
   password: string
 }
 
-export const Register = async ({ firstName, lastName, email, password, confirmPassword }: IDataRegister) => {
-  try {
-    if (password !== confirmPassword) {
-      console.log('As senhas não coincidem!');
-      return { error: 'As senhas não coincidem!' };
+
+class Auth {
+  private endpoint: string = "http://localhost:3000/"
+
+  async register(props: IDataRegister) {
+    try {
+      const response = await fetch(`http://localhost:3000/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(props)
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
     }
-
-    return {
-      data: {
-        firstName,
-        lastName,
-        email,
-        message: 'Registro realizado com sucesso!'
-      }
-    };
-
-  } catch (error) {
-    console.log(error);
-    return { error: 'Erro ao registrar' };
   }
-}
 
-export const LoginUser = async ({ email, password }: ILoginUser) => {
-  try {
-    return {
-      data: {
-        email: email,
-        message: 'Login realizado com sucesso!'
-      }
-    };
-  } catch (error) {
-    console.log(error);
-    return { error: 'Erro ao realizar login' };
+  async singIn(props: ILoginUser) {
+    try {
+      const response = await fetch(`http://localhost:3000/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(props)
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
+
+} export { Auth };
