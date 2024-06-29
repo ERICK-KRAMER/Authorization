@@ -1,45 +1,48 @@
-const endpoit = "http://localhost:3000";
-
 export interface IDataRegister {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-export interface ILoginUser{
+export interface ILoginUser {
   email: string,
   password: string
 }
 
-export const Register = async({firstName, lastName, email, password}: IDataRegister) => {
+export const Register = async ({ firstName, lastName, email, password, confirmPassword }: IDataRegister) => {
   try {
-    const response = await fetch(`${endpoit}/CreateUser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ firstName, lastName, email, password })
-    })
-    const data = response.json();
-    return data;
+    if (password !== confirmPassword) {
+      console.log('As senhas não coincidem!');
+      return { error: 'As senhas não coincidem!' };
+    }
+
+    return {
+      data: {
+        firstName,
+        lastName,
+        email,
+        message: 'Registro realizado com sucesso!'
+      }
+    };
+
   } catch (error) {
     console.log(error);
+    return { error: 'Erro ao registrar' };
   }
 }
 
-export const LoginUser = async({ email, password }:ILoginUser) => {
+export const LoginUser = async ({ email, password }: ILoginUser) => {
   try {
-    const response = await fetch(`${endpoit}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await response.json();
-    return { data };
+    return {
+      data: {
+        email: email,
+        message: 'Login realizado com sucesso!'
+      }
+    };
   } catch (error) {
     console.log(error);
+    return { error: 'Erro ao realizar login' };
   }
 }
