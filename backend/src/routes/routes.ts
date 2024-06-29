@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { CreateUserController } from "../controller/createUserController";
-import { AuthLoginUserController } from "../controller/authLoginUserController";
+import { Register } from "../controller/createUserController"
+import { SingIn } from "../controller/loginController";
 import { Auth } from "../middlewares/authToken";
 
 const router = Router();
 
-const userController = new CreateUserController();
-const authLoginUserController = new AuthLoginUserController();
+const userController = new Register();
+const authLoginUserController = new SingIn();
 
-router.get("/", Auth ,(req, res) => {
+router.get("/", Auth, (req, res) => {
   res.send("Hello World");
 });
 
-router.post('/CreateUser', userController.handler);
+router.post('/register', userController.handler);
 router.post('/login', authLoginUserController.handler);
 
 export { router };

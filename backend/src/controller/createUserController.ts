@@ -1,26 +1,29 @@
 import { Request, Response } from "express";
-import { IUser } from "../types/user";
-import { z, ZodType } from "zod";
-import { CreateUser } from "../auth/createUser"
+import { CreateUser } from "../auth/createUser";
+import { z } from "zod";
 
-const UserSchema: ZodType<IUser> = z.object({
+const registerSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
-  email: z.string().email("Digite um email valido"),
-  password: z.string().min(6, "A senha precisa coter no minimo 6 caracteres"),
-})
+  email: z.string().email(),
+  password: z.string(),
+});
 
-class CreateUserController {
-  async handler (request:Request, response:Response) {
+class Register {
+  async handler(request: Request, resposne: Response) {
     try {
-      const { firstName, lastName, email, password } = UserSchema.parse(request.body);
-      const CreateNewUser = new CreateUser();
-      const user = await CreateNewUser.execute({ firstName, lastName, email, password });
-      return response.status(201).json(user);
+      const { firstName, lastName, email, password } = registerSchema.parse(request.body);
+      const user = new CreateUser();
+      const newUser = user.execute({ firstName, lastName, email, password });
+      return resposne.status(201).json(newUser);
     } catch (error) {
-      response.status(400).json({error: `Não foi possivel criar usuário, ${error}`});
+      resposne.status(400).json({
+        message: 'Error',
+        status: 400,
+        error
+      })
     }
   }
 }
 
-export { CreateUserController };
+export { Register }
